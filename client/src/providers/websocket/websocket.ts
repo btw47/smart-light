@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import * as io from 'socket.io-client';
@@ -7,10 +6,14 @@ import { Environment } from '../../environment/environment';
 
 @Injectable()
 export class WebsocketProvider {
+  //websocket events
+  private readonly TOGGLE_LIGHT: string = 'TOGGLE_LIGHT';
+  private readonly TOGGLE_LIGHT_RESPONSE: string = 'TOGGLE_LIGHT_RESPONSE';
+
   //the websocket connection instance
   private socket: io;
 
-  constructor(private http: HttpClient, private environment: Environment) { }
+  constructor(private environment: Environment) { }
 
   /**
    * @description Initialize websocket connection
@@ -19,9 +22,9 @@ export class WebsocketProvider {
     //initialize the websocket connection at the specified endpoint
     this.socket = io(this.environment.BASE_ENDPOINT);
 
-    //handle events @ 'example-pong'
-    this.socket.on('example-pong', data => {
-      console.log("PONG");
+    //handle response from websocket event: TOGGLE_LIGHT_RESPONSE
+    this.socket.on(this.TOGGLE_LIGHT_RESPONSE, data => {
+      console.log("TOGGLE LIGHT RESPONSE: ", data);
     });
   }
 
@@ -29,6 +32,6 @@ export class WebsocketProvider {
    * @description Emits an event to the websocket
    */
   public emitToWebsocket(): void {
-    this.socket.emit('example-ping', { duration: 2 });
+    this.socket.emit(this.TOGGLE_LIGHT);
   }
 }
