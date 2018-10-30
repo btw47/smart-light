@@ -1,12 +1,13 @@
-var fs = require('fs');
 var app = require('http').createServer(initApp);
 var io = require('socket.io')(app);
+var exec = require('child_process').exec;
 
-var initApp = () => {
-	console.log("INITIALIZING APP");
-}
+//init app method
+var initApp = () => { console.log("INITIALIZING APP"); }
 
 //constants
+const ON = 'ON';
+const OFF = 'OFF';
 const TOGGLE_LIGHT = 'TOGGLE_LIGHT';
 const TOGGLE_LIGHT_RESPONSE = 'TOGGLE_LIGHT_RESPONSE';
 
@@ -18,18 +19,19 @@ let lightIsOn = false;
 
 let toggleLight = () => {
 	return new Promise((resolve, reject) => {
+		//update the status of the light
 		lightIsOn = !lightIsOn;
-		console.log("LIGHT IS ON?: ", lightIsOn);
-	
-		//call python script to execute GPIO manipulation here
-		
-		let error = false;
-		if (error) {
-			reject('An error occuring while toggling the light.');
-		} 
-		else {
-			resolve(lightIsOn);
-		}
+
+		//call python script to execute GPIO manipulation
+		dir = exec(`python toggleLight.py ${ lightIsOn ? ON : OFF }`, function(err) {
+			if (err) {
+				console.log("ERR: ", err)
+				reject('An error occuring while toggling the light.');
+			} 
+			else {
+				resolve(lightIsOn);
+			}
+		});
 	});
 }
 
@@ -39,11 +41,11 @@ io.sockets.on('connection', socket => {
 
 	socket.on(TOGGLE_LIGHT, data => {
 		toggleLight()
-			.then(res => {
-				socket.emit(TOGGLE_LIGHT_RESPONSE, { isSuccess: true, lightIsOn: res });
+			.then(lightIsOn => {
+				socket.emit(TOGGLE_LIGHT_RESPONSE, { isSuccess: true, lightIsOn });
 			})
-			.catch(err => {
-				socket.emit(TOGGLE_LIGHT_RESPONSE, { isSuccess: false, error: err });
+			.catch(error => {
+				socket.emit(TOGGLE_LIGHT_RESPONSE, { isSuccess: false, error });
 			})
 	})
 
