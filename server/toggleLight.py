@@ -13,21 +13,21 @@ GPIO.setwarnings(False)
 GPIO.setup(signalPin, GPIO.OUT, initial=GPIO.HIGH)
 
 try:
-        # if there is no argument to declare ON / OFF status ==> throw error
-        if len(sys.argv) == 1:
-            raise Exception('Sorry, not enough arguments. Please append ON or OFF to your command.')
-	    GPIO.output(signalPin, GPIO.LOW)
+	# if there is no argument to declare ON / OFF status ==> throw error
+	if len(sys.argv) == 1:
+		raise Exception('Sorry, not enough arguments. Please append ON or OFF to your command.')
+		GPIO.output(signalPin, GPIO.HIGH)
 
-        # determine whether the status of the light is ON or OFF
-        lightIsOn = sys.argv[1] == ON
+	# determine whether the status of the light is ON or OFF
+	lightIsOn = sys.argv[1] == ON
 	
-        # if the light is being triggered ==> open relay
+    # if the light is being triggered ==> open relay
 	if (lightIsOn):
 		print 'TURN LIGHT ON'
 		
 		signalOutput = GPIO.HIGH
 		GPIO.output(signalPin, GPIO.LOW)
-        # else ==> close relay
+	# else ==> close relay
 	else:
 		print 'TURN LIGHT OFF'
 		signalOutput = GPIO.LOW

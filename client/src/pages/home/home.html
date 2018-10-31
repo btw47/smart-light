@@ -7,5 +7,8 @@
 </ion-header>
 
 <ion-content padding>
-  <button ion-button (click)="toggleLight()">CLICK ME</button>
+  <ion-item>
+    <ion-label>Bedroom Light</ion-label>
+    <ion-toggle (ionChange)="toggleLight()" checked="false"></ion-toggle>
+  </ion-item>
 </ion-content>
