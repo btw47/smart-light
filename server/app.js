@@ -50,3 +50,14 @@ io.sockets.on('connection', socket => {
 	})
 
 })
+
+//clear up GPIO pins in use at disconnect
+io.sockets.on('disconnect', () => {
+	console.log('Connection lost.');
+	console.log('Cleaning up Raspberry Pi now.');
+
+	exec('python cleanUp.py', function(err) {
+		if (err) console.log('An error occured while attempting to clean up Raspberry Pi on disconnect.');
+	})
+})
+
