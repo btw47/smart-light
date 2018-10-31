@@ -1,0 +1,5 @@
+{
+	"uid": "smart-light",
+	"script": "app.js",
+	"sourceDir": "~/Projects/smart-light/server/"
+}
