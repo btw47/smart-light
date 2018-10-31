@@ -8,13 +8,17 @@ import RPi.GPIO as GPIO
 
 ON = 'ON'
 
-signalPin = 18
+signalPin = 2
 
 GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
 GPIO.setup(signalPin, GPIO.OUT, initial=GPIO.LOW)
 
 try:
-	lightIsOn = sys.argv[1] == ON
+        if len(sys.argv) == 1:
+            raise Exception('Sorry, not enough arguments. Please append ON or OFF to your command.')
+	
+        lightIsOn = sys.argv[1] == ON
 	
 	if (lightIsOn):
 		print 'TURN LIGHT ON'
