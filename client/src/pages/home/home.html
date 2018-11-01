@@ -12,3 +12,7 @@
     <ion-toggle (ionChange)="toggleLight()" checked="false"></ion-toggle>
   </ion-item>
 </ion-content>
+
+<ion-footer>
+  <ion-label class="footer" *ngIf="websocketProvider.connected">Connected: {{ websocketProvider.environment.BASE_ENDPOINT }}</ion-label>
+</ion-footer>
